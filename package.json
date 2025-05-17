@@ -8,8 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "start:dev": "npm run build && npm link",
-    "prepare": "npm run build"
+    "start:dev": "npm run build --force && npm link"
   },
   "keywords": [],
   "author": "",

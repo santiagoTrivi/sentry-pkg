@@ -1,6 +1,6 @@
 {
-  "name": "sentry",
-  "version": "1.0.0",
+  "name": "@sentry-pkg/pkg",
+  "version": "0.0.0-development",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,7 +37,15 @@
     "@types/bcrypt": "^5.0.2",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "semantic-release": "^24.2.4",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

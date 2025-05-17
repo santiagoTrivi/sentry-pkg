@@ -1,8 +1,8 @@
 // auth.service.ts
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { CreateUserDto } from "./dto/create.user.dto";
-import { LoginUserDto } from "./dto/login.user.dto";
+import { CreateUserDto } from "./infra/dto/create.user.dto";
+import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
 import { User } from "./sentry.interfaces";
 
@@ -21,7 +21,7 @@ export class SentryService {
 
   async login(loginUserDto: LoginUserDto) {
     console.log("data from loginUserDto", loginUserDto);
-    const user = this.users.find((u) => u.username === loginUserDto.username);
+    const user = this.users.find((u) => u.username === loginUserDto.email);
     console.log(user);
     console.log(this.users);
 

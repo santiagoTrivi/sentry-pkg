@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create.user.dto";
-import { LocalAuthGuard } from "./guard/local.guard";
+import { CreateUserDto } from "./infra/dto";
+import { LocalAuthGuard } from "./infra/guard";
 import { SentryService } from "./sentry.service";
 
 @Controller("auth")
@@ -9,6 +9,7 @@ export class SentryController {
 
   @Post("signup")
   signup(@Body() CreateUserDto: CreateUserDto) {
+    console.log("data from CreateUserDto", CreateUserDto);
     return this.sentryService.register(CreateUserDto);
   }
   @UseGuards(LocalAuthGuard)

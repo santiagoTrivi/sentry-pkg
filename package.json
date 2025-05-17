@@ -43,7 +43,8 @@
   "files": [
     "dist",
     "README.md",
-    "bin.js"
+    "bin.js",
+    "sentry_slogan-removebg-preview.png"
   ],
   "publishConfig": {
     "access": "public"

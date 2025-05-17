@@ -1,5 +1,11 @@
-import { DataSourceOptions } from "typeorm";
+export interface DatabaseOptions {
+  user: string;
+  host: string;
+  database: string;
+  password: string;
+  port: number;
+}
 
 export interface SentryOptions {
-  dataSource?: Partial<DataSourceOptions>;
+  databaseOptions?: DatabaseOptions;
 }

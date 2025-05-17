@@ -29,7 +29,8 @@
     "pg": "^8.16.0",
     "reflect-metadata": "^0.2.2",
     "rimraf": "^6.0.1",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -42,9 +43,11 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "bin.js"
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "bin": "./bin.js"
 }

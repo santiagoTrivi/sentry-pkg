@@ -4,11 +4,15 @@ import { JwtModule } from "@nestjs/jwt";
 import { readFileSync } from "fs";
 import { SentryController } from "./sentry.controller";
 import { RsaStrategy, LocalStrategy } from "./infra/strategy";
+import { SentryOptions } from "./domain/sentryOptions";
+import { MemoryModule } from "./infra/config/memory/memory.module";
+import { PostgresModule } from "./infra/config/typeorm/Postgres.module";
+import { databaseModule } from "./infra/config/factory.modules";
 
 @Module({})
 export class SentryModule {
-  static forRoot(): DynamicModule {
-    const providers = [SentryService, RsaStrategy, LocalStrategy];
+  static forRoot(options?: SentryOptions): DynamicModule {
+    const providers = [RsaStrategy, LocalStrategy, SentryService];
     const controllers = [SentryController];
     return {
       imports: [
@@ -18,6 +22,7 @@ export class SentryModule {
             algorithm: "RS256",
           },
         }),
+        databaseModule(options?.databaseOptions),
       ],
       providers,
       controllers,

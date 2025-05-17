@@ -29,7 +29,6 @@ export class SentryService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    console.log("data from loginUserDto", loginUserDto);
     const user = await this.repo.find(loginUserDto.email);
 
     if (!user) return null;

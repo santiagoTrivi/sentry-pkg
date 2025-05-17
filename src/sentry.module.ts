@@ -5,8 +5,6 @@ import { readFileSync } from "fs";
 import { SentryController } from "./sentry.controller";
 import { RsaStrategy, LocalStrategy } from "./infra/strategy";
 import { SentryOptions } from "./domain/sentryOptions";
-import { MemoryModule } from "./infra/config/memory/memory.module";
-import { PostgresModule } from "./infra/config/typeorm/Postgres.module";
 import { databaseModule } from "./infra/config/factory.modules";
 
 @Module({})

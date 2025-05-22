@@ -4,7 +4,6 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "./infra/dto/create.user.dto";
 import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
-import { User } from "./sentry.interfaces";
 import { SentryRepository } from "./domain/sentry.repository";
 
 @Injectable()
@@ -44,9 +43,19 @@ export class SentryService {
   }
 
   signToken(user: User) {
-    const payload = { username: user.username, sub: user.username };
+    const payload = { username: user.username, id: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async getauth(id: string) {
+    const user = await this.repo.findById(id);
+
+    if (!user) throw new BadRequestException("User not found");
+
+    const { password, ...rest } = user;
+
+    return rest;
   }
 }

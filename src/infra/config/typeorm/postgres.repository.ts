@@ -5,6 +5,15 @@ import { UserProps } from "../../../domain/user.interface";
 
 export class PostgresRepository implements SentryRepository {
   constructor(@Inject(PG_CONNECTION) private conn: any) {}
+  async findById(id: string): Promise<UserProps | null> {
+    const res = await this.conn.query("SELECT * FROM users WHERE id = $1", [
+      id,
+    ]);
+
+    if (res.rows.length === 0) return null;
+
+    return res.rows[0];
+  }
   async register(user: UserProps): Promise<void> {
     const res = await this.conn.query(
       "INSERT INTO users (email, password) VALUES ($1, $2)",
@@ -12,7 +21,7 @@ export class PostgresRepository implements SentryRepository {
     );
     return res.rows;
   }
-  async find(email: string): Promise<any | null> {
+  async find(email: string): Promise<UserProps | null> {
     const res = await this.conn.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);

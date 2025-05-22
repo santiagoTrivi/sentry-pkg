@@ -5,6 +5,7 @@ import { CreateUserDto } from "./infra/dto/create.user.dto";
 import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
 import { SentryRepository } from "./domain/sentry.repository";
+import { UserProps } from "./domain/user.interface";
 
 @Injectable()
 export class SentryService {
@@ -42,7 +43,7 @@ export class SentryService {
     return user;
   }
 
-  signToken(user: User) {
+  signToken(user: UserProps) {
     const payload = { username: user.username, id: user.id };
     return {
       access_token: this.jwtService.sign(payload),

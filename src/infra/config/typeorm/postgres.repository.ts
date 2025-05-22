@@ -13,7 +13,7 @@ export class PostgresRepository implements SentryRepository {
     return res.rows;
   }
   async find(email: string): Promise<any | null> {
-    const res = await this.conn.query("SELECT * FROM user WHERE email = $1", [
+    const res = await this.conn.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
     return res.rows[0];

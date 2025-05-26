@@ -6,11 +6,19 @@ import { SentryController } from "./sentry.controller";
 import { RsaStrategy, LocalStrategy } from "./infra/strategy";
 import { SentryOptions } from "./domain/sentryOptions";
 import { databaseModule } from "./infra/config/factory.modules";
+import { AuthService } from "./auth.service";
+import { RefreshTokenStrategy } from "./infra/strategy/refresh.token.strategy";
 
 @Module({})
 export class SentryModule {
   static forRoot(options?: SentryOptions): DynamicModule {
-    const providers = [RsaStrategy, LocalStrategy, SentryService];
+    const providers = [
+      RsaStrategy,
+      LocalStrategy,
+      RefreshTokenStrategy,
+      SentryService,
+      AuthService,
+    ];
     const controllers = [SentryController];
     return {
       imports: [
@@ -18,6 +26,7 @@ export class SentryModule {
           privateKey: readFileSync("private.key", "utf8"),
           signOptions: {
             algorithm: "RS256",
+            expiresIn: options?.expiresIn || "1m",
           },
         }),
         databaseModule(options?.databaseOptions),

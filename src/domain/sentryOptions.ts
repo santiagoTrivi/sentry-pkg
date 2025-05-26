@@ -7,5 +7,6 @@ export interface DatabaseOptions {
 }
 
 export interface SentryOptions {
+  expiresIn?: string | number;
   databaseOptions?: DatabaseOptions;
 }

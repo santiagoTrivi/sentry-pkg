@@ -1,3 +1,4 @@
-import { LocalAuthGuard } from "./local.guard";
+import { SentryAuthGuard } from "./local.guard";
+import { RefreshAuthGuard } from "./refresh.guard";
 
-export { LocalAuthGuard };
+export { SentryAuthGuard, RefreshAuthGuard };

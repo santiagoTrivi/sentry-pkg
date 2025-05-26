@@ -1,6 +1,6 @@
 import { AuthGuard } from "@nestjs/passport";
 
-export class LocalAuthGuard extends AuthGuard("local") {
+export class SentryAuthGuard extends AuthGuard("local") {
   constructor() {
     super();
   }

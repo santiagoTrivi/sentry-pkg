@@ -3,7 +3,9 @@ import { Pool } from "pg";
 import { PG_CONNECTION } from "./contant";
 import { PostgresRepository } from "./postgres.repository";
 import { DatabaseOptions } from "../../../domain/sentryOptions";
-import { SentryRepository } from "../../../domain/sentry.repository";
+import { UserRepository } from "../../../domain/user.repository";
+import { AuthRepository } from "../../../domain/auth.repository";
+import { PostgresAuthRepository } from "./auth.postgres.repository";
 
 @Module({})
 export class PostgresModule implements OnModuleInit {
@@ -16,7 +18,13 @@ export class PostgresModule implements OnModuleInit {
     await this.conn.query(
       `
       CREATE TABLE IF NOT EXISTS users 
-      (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, createdAt TIMESTAMP DEFAULT NOW(), updatedAt TIMESTAMP DEFAULT NOW())
+      (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), email VARCHAR(255) NOT NULL, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, "createdAt" TIMESTAMP DEFAULT NOW(), "updatedAt" TIMESTAMP DEFAULT NOW())
+      `
+    );
+    await this.conn.query(
+      `
+      CREATE TABLE IF NOT EXISTS auth_token 
+      (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), "userId" UUID NOT NULL, "refreshToken" TEXT, "createdAt" TIMESTAMP DEFAULT NOW(), "updatedAt" TIMESTAMP DEFAULT NOW(), CONSTRAINT fk_user FOREIGN KEY ("userId") REFERENCES users (id) ON DELETE CASCADE)
       `
     );
   }
@@ -34,8 +42,12 @@ export class PostgresModule implements OnModuleInit {
     const providers = [
       dbProvider,
       {
-        provide: SentryRepository,
+        provide: UserRepository,
         useClass: PostgresRepository,
+      },
+      {
+        provide: AuthRepository,
+        useClass: PostgresAuthRepository,
       },
     ];
     return {

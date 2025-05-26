@@ -18,6 +18,7 @@ export class SentryModule {
           privateKey: readFileSync("private.key", "utf8"),
           signOptions: {
             algorithm: "RS256",
+            expiresIn: options?.expiresIn || "1m",
           },
         }),
         databaseModule(options?.databaseOptions),

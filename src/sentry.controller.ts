@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { CreateUserDto } from "./infra/dto";
-import { LocalAuthGuard } from "./infra/guard";
+import { SentryAuthGuard } from "./infra/guard";
 import { SentryService } from "./sentry.service";
 import { RsaAuthGuard } from "./infra/guard/rsa.guard";
 
@@ -20,7 +20,7 @@ export class SentryController {
     console.log("data from CreateUserDto", CreateUserDto);
     return this.sentryService.register(CreateUserDto);
   }
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(SentryAuthGuard)
   @Post("login")
   login(@Request() req) {
     return this.sentryService.signToken(req.user);

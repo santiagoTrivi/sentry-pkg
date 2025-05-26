@@ -1,3 +1,3 @@
-import { LocalAuthGuard } from "./local.guard";
+import { SentryAuthGuard } from "./local.guard";
 
-export { LocalAuthGuard };
+export { SentryAuthGuard };

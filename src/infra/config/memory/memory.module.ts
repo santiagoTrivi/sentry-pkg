@@ -1,20 +1,23 @@
 import { Module } from "@nestjs/common";
-import { SentryRepository } from "../../../domain/sentry.repository";
+import { UserRepository } from "../../../domain/user.repository";
 import { MemoryRepository } from "./memory.repository";
+import { AuthRepository } from "../../../domain/auth.repository";
+import { AuthMemoryRepository } from "./auth.memory.repository";
+
+const providers = [
+  {
+    provide: UserRepository,
+    useClass: MemoryRepository,
+  },
+  {
+    provide: AuthRepository,
+    useClass: AuthMemoryRepository,
+  },
+];
 
 @Module({
   imports: [],
-  providers: [
-    {
-      provide: SentryRepository,
-      useClass: MemoryRepository,
-    },
-  ],
-  exports: [
-    {
-      provide: SentryRepository,
-      useClass: MemoryRepository,
-    },
-  ],
+  providers,
+  exports: providers,
 })
 export class MemoryModule {}

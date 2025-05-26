@@ -7,13 +7,17 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { CreateUserDto } from "./infra/dto";
-import { SentryAuthGuard } from "./infra/guard";
+import { RefreshAuthGuard, SentryAuthGuard } from "./infra/guard";
 import { SentryService } from "./sentry.service";
 import { RsaAuthGuard } from "./infra/guard/rsa.guard";
+import { AuthService } from "./auth.service";
 
 @Controller("auth")
 export class SentryController {
-  constructor(private readonly sentryService: SentryService) {}
+  constructor(
+    private readonly sentryService: SentryService,
+    private readonly authService: AuthService
+  ) {}
 
   @Post("signup")
   signup(@Body() CreateUserDto: CreateUserDto) {
@@ -23,7 +27,14 @@ export class SentryController {
   @UseGuards(SentryAuthGuard)
   @Post("login")
   login(@Request() req) {
-    return this.sentryService.signToken(req.user);
+    return this.authService.signToken(req.user);
+  }
+
+  @UseGuards(RefreshAuthGuard)
+  @Post("refresh")
+  async refreshTokens(@Request() req) {
+    const [id, refreshToken] = [req.user.id, req.user.refreshToken];
+    return await this.authService.refreshTokens(id, refreshToken);
   }
 
   @Get("me")

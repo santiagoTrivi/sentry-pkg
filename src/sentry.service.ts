@@ -4,14 +4,13 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "./infra/dto/create.user.dto";
 import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
-import { SentryRepository } from "./domain/sentry.repository";
-import { UserProps } from "./domain/user.interface";
+import { UserRepository } from "./domain/user.repository";
 
 @Injectable()
 export class SentryService {
   constructor(
     private jwtService: JwtService,
-    private readonly repo: SentryRepository
+    private readonly repo: UserRepository
   ) {}
 
   async register(createUserDto: CreateUserDto) {
@@ -26,28 +25,6 @@ export class SentryService {
     await this.repo.register(newUser);
 
     return { message: "User registered successfully" };
-  }
-
-  async login(loginUserDto: LoginUserDto) {
-    const user = await this.repo.find(loginUserDto.email);
-
-    if (!user) return null;
-
-    const isPasswordValid = await bcrypt.compare(
-      loginUserDto.password,
-      user.password
-    );
-
-    if (!isPasswordValid) return null;
-
-    return user;
-  }
-
-  signToken(user: UserProps) {
-    const payload = { username: user.username, id: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 
   async getauth(id: string) {

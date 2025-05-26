@@ -19,8 +19,6 @@ export class PostgresAuthRepository implements AuthRepository {
       return this.create({
         userId,
         refreshToken,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
     await this.conn.query(

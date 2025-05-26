@@ -19,8 +19,8 @@ export class MemoryRepository implements UserRepository {
     const tosave = {
       id: uuidv6(),
       ...user,
-      createdat: new Date(),
-      updatedat: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.users.push(tosave);
   }

@@ -4,6 +4,8 @@
 
 Un Paquete de autenticación basado en RSA para [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
+[![Build Status](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c7c_Build-Passing-brightgreen.svg)]() [![License: MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)](/LICENSE) [![Deps](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c9e_Deps-Up--to--date-brightgreen.svg)]()
+
 ## Installacion de paquete
 
 ```bash
@@ -132,6 +134,52 @@ export class AppModule {}
 ```
 
 En este ejemplo, el `SentryModule` se inicializa para que sus tokens internos duren 5 minutos y toda la data persistente se guarde en la base de datos [PostgreSQL](https://www.postgresql.org) especificada. Si databaseOptions se omitiera, la data se manejaría en memoria.
+
+## Endpoints del paquetes
+
+Este controlador maneja las operaciones relacionadas con la autenticación de usuarios, incluyendo registro, inicio de sesión, refresco de tokens y obtención de la información del usuario autenticado.
+
+#### Registro de Usuario
+
+| **Registro**               | **Descripción**                                                                                           |
+| -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **1. Registro de Usuario** | Permite a un nuevo usuario registrarse en el sistema.                                                     |
+| **Endpoint**               | POST /auth/signup                                                                                         |
+| **Descripción**            | Crea una nueva cuenta de usuario con la información proporcionada.                                        |
+| **Cuerpo de la Petición**  | Tipo: application/json <br> Esquema: `{ "email": "string", "password": "string", "username": "string" } ` |
+
+#### Inicio de Sesión de Usuario
+
+| **Inicio de Sesión**               | **Descripción**                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **2. Inicio de Sesión de Usuario** | Permite a un usuario existente iniciar sesión y obtener un token de autenticación.                    |
+| **Endpoint**                       | POST /auth/login                                                                                      |
+| **Descripción**                    | Autentica a un usuario utilizando sus credenciales y emite un token de acceso y un token de refresco. |
+| **Protección**                     | Requiere un proceso de autenticación previo para validar las credenciales.                            |
+| **Cuerpo de la Petición**          | Tipo: application/json <br> Esquema: `{ "email": "string", "password": "string" }`                    |
+| **Cuerpo de la Respuesta**         | Esquema: `{ "access_token": "string", "refresh_token": "string" }`                                    |
+
+#### Refrescar Tokens de Acceso
+
+| **Refrescar Tokens**              | **Descripción**                                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **3. Refrescar Tokens de Acceso** | Permite obtener un nuevo par de tokens de acceso y refresco utilizando un token de refresco válido. |
+| **Endpoint**                      | POST /auth/refresh                                                                                  |
+| **Descripción**                   | Intercambia un token de refresco caducado por un nuevo par de tokens de acceso y refresco.          |
+| **Protección**                    | Requiere un `bearer token` refresh token.                                                           |
+| **Cuerpo de la Petición**         | Ninguno.                                                                                            |
+| **Cuerpo de la Respuesta**        | Esquema: `{ "access_token": "string", "refresh_token": "string" }`                                  |
+
+#### Obtener Información del Usuario Autenticado
+
+| **Obtener Información del Usuario**                | **Descripción**                                                                                                            |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **4. Obtener Información del Usuario Autenticado** | Permite a un usuario autenticado obtener su propia información de perfil.                                                  |
+| **Endpoint**                                       | GET /auth/me                                                                                                               |
+| **Descripción**                                    | Retorna los detalles del perfil del usuario actualmente autenticado.                                                       |
+| **Protección**                                     | Requiere `bearer token`, un token de acceso válido en el encabezado Authorization.                                         |
+| **Parámetros de la Petición**                      | Ninguno.                                                                                                                   |
+| **Cuerpo de la Respuesta**                         | Esquema: `{ "id": "string", "username": "string", "email": "string", "createdAt": "timestamp", "updatedAt": "timestamp" }` |
 
 ## Manejo de errores
 

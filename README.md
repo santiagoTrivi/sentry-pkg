@@ -4,15 +4,13 @@
 
 Un Paquete de autenticación basado en RSA para [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-## Descripción general
-
-### Installacion de paquete
+## Installacion de paquete
 
 ```bash
 $ npm i @sentry-pkg/pkg
 ```
 
-### Modo de uso
+## Modo de uso
 
 El paquete debe ser inicializado antes de su uso para generar el par de claves (pública y privada) utilizando el algoritmo RSA. Utiliza el siguiente comando:
 
@@ -20,11 +18,11 @@ El paquete debe ser inicializado antes de su uso para generar el par de claves (
 $ npx @sentry-pkg/pkg --init
 ```
 
-#### Parametros de inicialización
+### Parametros de inicialización
 
 - --force: Inicialización forzada, para generar o reemplazar el par de claves (pública y privada) utilizando el algoritmo RSA
 
-### Integración
+## Integración
 
 En NestJS, la integración con sentry-pkg/pkg se facilita a través de un módulo dedicado, como el `SentryModule` que estás importando. Este módulo encapsula la lógica necesaria para inicializar el paquete y hacer que sus funcionalidades estén disponibles en toda tu aplicación o sistema.
 
@@ -134,3 +132,21 @@ export class AppModule {}
 ```
 
 En este ejemplo, el `SentryModule` se inicializa para que sus tokens internos duren 5 minutos y toda la data persistente se guarde en la base de datos [PostgreSQL](https://www.postgresql.org) especificada. Si databaseOptions se omitiera, la data se manejaría en memoria.
+
+## Manejo de errores
+
+`AllExceptionsFilter` es una clase especializada (un filtro de excepciones) proporcionada por @sentry-pkg/pkg que se encarga de capturar todas las excepciones no manejadas que ocurren durante el procesamiento de una petición HTTP en el sistema.
+
+```typescript
+import { AllExceptionsFilter } from "@sentry-pkg/pkg";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new AllExceptionsFilter());
+
+  await app.listen(3000);
+}
+bootstrap();
+```

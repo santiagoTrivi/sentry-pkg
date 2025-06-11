@@ -62,3 +62,75 @@ import { SentryModule } from "@sentry-pkg/pkg";
 })
 export class AppModule {}
 ```
+
+#### Opciones de Configuración `SentryOptions`
+
+El método estático `forRoot` acepta un objeto `SentryOptions` opcional, que te permite personalizar el módulo según tus necesidades.
+
+| Opción            | Tipo              | Valor por defecto            | Opciones                                                                                   |
+| ----------------- | ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
+| `expiresIn`       | `string` `number` | `1m` (un minuto)             | `1m`, `5h`, `30d`                                                                          |
+| `databaseOptions` | `DatabaseOptions` | La data se guarda en memoria | Credenciales para la conexión a una base de datos [PostgreSQL](https://www.postgresql.org) |
+
+```typescript
+interface SentryOptions {
+  expiresIn?: string | number;
+  databaseOptions?: DatabaseOptions;
+}
+```
+
+`expiresIn?: string | number`
+
+- Tipo: string | number
+- Valor por defecto: `1m` (un minuto)
+
+Esta opción define el tiempo de duración para el token interno utilizado por el módulo. Este token es usado para la autenticación, la validez de alguna sesión, o la duración de ciertos datos transitorios que maneja el módulo. Si no se especifica, el token tendrá una duración predeterminada de un minuto.
+
+Puedes expresar la duración como:
+
+- Un número (en milisegundos).
+- Una cadena de texto con unidades (por ejemplo: `1m`, `5h`, `30d`).
+
+`databaseOptions?: DatabaseOptions`
+
+- Tipo: DatabaseOptions
+- Valor por defecto: La data se guarda en memoria si no se proporciona esta opción.
+
+Esta opción permite configurar las credenciales para la conexión a una base de datos [PostgreSQL](https://www.postgresql.org). El módulo utilizará esta configuración para la persistencia de datos, lo que significa que la información relevante (usuario) se almacenará en la base de datos en lugar de solo en la memoria.
+
+Si `databaseOptions` no se proporciona, el módulo operará en modo "solo en memoria". Esto es útil para entornos de desarrollo, pruebas o situaciones donde la persistencia de datos no es crítica o se gestiona externamente.
+
+```typescript
+interface DatabaseOptions {
+  user: string; // El nombre de usuario de la base de datos PostgreSQL.
+  host: string; // La dirección del host de la base de datos (ej. 'localhost').
+  database: string; // El nombre de la base de datos a la que conectarse.
+  password: string; // La contraseña del usuario de la base de datos.
+  port: number; // El puerto de conexión de la base de datos PostgreSQL (ej. 5432).
+}
+```
+
+#### Ejemplo de Uso
+
+```typescript
+import { SentryModule } from "@sentry-pkg/pkg";
+
+@Module({
+  imports: [
+    SentryModule.forRoot({
+      expiresIn: "5m", // El token durará 5 minutos
+      databaseOptions: {
+        user: "myuser",
+        host: "localhost",
+        database: "myapp",
+        password: "mypassword",
+        port: 5432,
+      },
+    }),
+  ],
+  // ... otros controladores y proveedores
+})
+export class AppModule {}
+```
+
+En este ejemplo, el `SentryModule` se inicializa para que sus tokens internos duren 5 minutos y toda la data persistente se guarde en la base de datos [PostgreSQL](https://www.postgresql.org) especificada. Si databaseOptions se omitiera, la data se manejaría en memoria.

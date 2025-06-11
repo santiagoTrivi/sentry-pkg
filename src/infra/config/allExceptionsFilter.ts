@@ -16,6 +16,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
+    let content = exception.getResponse();
+
+    if (typeof content === "object") {
+      response.status(status).json({
+        timestamp: new Date().toISOString(),
+        path: request.url,
+        ...content,
+      });
+      return;
+    }
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

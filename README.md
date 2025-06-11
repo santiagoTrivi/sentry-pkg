@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="./sentry_slogan-removebg-preview.png" width="400" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="https://res.cloudinary.com/dtp6k3i4c/image/upload/v1749608674/sentry_slogan-removebg-preview_dx4h3m.png" width="400" alt="Nest Logo" /></a>
 </p>
-<p align="center">Un Paquete de autenticación basado en RSA para <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">Javascript</a> </p>
-    <p align="center">
+
+Un Paquete de autenticación basado en RSA para [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 ## Descripción general
 
@@ -19,3 +19,7 @@ El paquete debe ser inicializado antes de su uso para generar el par de claves (
 ```bash
 $ npx @sentry-pkg/pkg --init
 ```
+
+### Parametros de inicialización 
+
+* --force: Inicialización forzada, para generar o reemplazar el par de claves (pública y privada) utilizando el algoritmo RSA

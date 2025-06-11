@@ -2,6 +2,7 @@
 
 const yargs = require("yargs");
 const { exec } = require("child_process");
+const { existsSync } = require("fs");
 
 const executeCommand = (command) => {
   return new Promise((resolve, reject) => {
@@ -16,8 +17,13 @@ const executeCommand = (command) => {
 };
 
 // Main function to generate keys
-const generateKeys = async () => {
+const generateKeys = async (isforced) => {
   try {
+    if (existsSync("private.key") && existsSync("public.key") && !isforced) {
+      console.log("Keys already exist. Skipping key generation.");
+      return;
+    }
+
     console.log("Generating private key...");
     await executeCommand("openssl genrsa -out private.key 2048");
     console.log("Private key generated: private.key");
@@ -33,5 +39,5 @@ const generateKeys = async () => {
 };
 
 if (yargs.argv.init) {
-  generateKeys();
+  generateKeys(yargs.argv.force || false);
 }

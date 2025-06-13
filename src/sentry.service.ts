@@ -5,6 +5,8 @@ import { CreateUserDto } from "./infra/dto/create.user.dto";
 import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
 import { UserRepository } from "./domain/user.repository";
+import { validateCreateUserDto } from "./infra/helper/validateDtos";
+import { SentryError } from "./domain/sentry.error";
 
 @Injectable()
 export class SentryService {
@@ -14,17 +16,24 @@ export class SentryService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    try {
+      validateCreateUserDto(createUserDto);
 
-    const existingUser = await this.repo.find(createUserDto.email);
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    if (existingUser) throw new BadRequestException("User already exists");
+      const existingUser = await this.repo.find(createUserDto.email);
 
-    const newUser = { ...createUserDto, password: hashedPassword };
+      if (existingUser) throw new BadRequestException("User already exists");
 
-    await this.repo.register(newUser);
+      const newUser = { ...createUserDto, password: hashedPassword };
 
-    return { message: "User registered successfully" };
+      await this.repo.register(newUser);
+
+      return { message: "User registered successfully" };
+    } catch (error) {
+      if (error instanceof SentryError)
+        throw new BadRequestException(error.message);
+    }
   }
 
   async getauth(id: string) {

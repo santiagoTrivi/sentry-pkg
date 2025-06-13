@@ -16,6 +16,8 @@ export class AuthService {
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
+    if (!loginUserDto.email || !loginUserDto.password) return null;
+
     const user = await this.repo.find(loginUserDto.email);
 
     if (!user) return null;

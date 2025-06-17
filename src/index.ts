@@ -1,5 +1,5 @@
 import { SentryModule } from "./sentry.module";
-import { SentryService } from "./sentry.service";
 import { AllExceptionsFilter } from "./infra/config/allExceptionsFilter";
+import { RsaAuthGuard } from "./infra/guard/rsa.guard";
 
-export { SentryModule, AllExceptionsFilter };
+export { SentryModule, AllExceptionsFilter, RsaAuthGuard };

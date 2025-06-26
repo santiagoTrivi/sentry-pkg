@@ -1,8 +1,6 @@
 // auth.service.ts
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "./infra/dto/create.user.dto";
-import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
 import { UserRepository } from "./domain/user.repository";
 import { validateCreateUserDto } from "./infra/helper/validateDtos";
@@ -10,10 +8,7 @@ import { SentryError } from "./domain/sentry.error";
 
 @Injectable()
 export class SentryService {
-  constructor(
-    private jwtService: JwtService,
-    private readonly repo: UserRepository
-  ) {}
+  constructor(private readonly repo: UserRepository) {}
 
   async register(createUserDto: CreateUserDto) {
     try {
@@ -33,6 +28,8 @@ export class SentryService {
     } catch (error) {
       if (error instanceof SentryError)
         throw new BadRequestException(error.message);
+
+      throw error;
     }
   }
 

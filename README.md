@@ -168,7 +168,7 @@ Este controlador maneja las operaciones relacionadas con la autenticación de us
 | **Descripción**                   | Intercambia un token de refresco caducado por un nuevo par de tokens de acceso y refresco.          |
 | **Protección**                    | Requiere un `bearer token` refresh token.                                                           |
 | **Cuerpo de la Petición**         | Ninguno.                                                                                            |
-| **Cuerpo de la Respuesta**        | Esquema: `{ "access_token": "string", "refresh_token": "string" }`                                  |
+| **Cuerpo de la Respuesta**        | Esquema: `{ "access_token": "string" }`                                                             |
 
 #### Obtener Información del Usuario Autenticado
 

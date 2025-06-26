@@ -5,10 +5,14 @@ import * as bcrypt from "bcrypt";
 import { UserRepository } from "./domain/user.repository";
 import { validateCreateUserDto } from "./infra/helper/validateDtos";
 import { SentryError } from "./domain/sentry.error";
+import { SentryLogger } from "./config/logger/logger.abstract";
 
 @Injectable()
 export class SentryService {
-  constructor(private readonly repo: UserRepository) {}
+  constructor(
+    private readonly repo: UserRepository,
+    private readonly logger: SentryLogger
+  ) {}
 
   async register(createUserDto: CreateUserDto) {
     try {
@@ -26,9 +30,14 @@ export class SentryService {
 
       return { message: "User registered successfully" };
     } catch (error) {
-      if (error instanceof SentryError)
+      if (
+        error instanceof SentryError ||
+        error instanceof BadRequestException
+      ) {
+        this.logger.error(error.message);
         throw new BadRequestException(error.message);
-
+      }
+      this.logger.error("unexpected error");
       throw error;
     }
   }
@@ -36,7 +45,10 @@ export class SentryService {
   async getauth(id: string) {
     const user = await this.repo.findById(id);
 
-    if (!user) throw new BadRequestException("User not found");
+    if (!user) {
+      this.logger.error("User not found");
+      throw new BadRequestException("User not found");
+    }
 
     const { password, ...rest } = user;
 

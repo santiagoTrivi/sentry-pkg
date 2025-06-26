@@ -8,6 +8,8 @@ import { SentryOptions } from "./domain/sentryOptions";
 import { databaseModule } from "./infra/config/factory.modules";
 import { AuthService } from "./auth.service";
 import { RefreshTokenStrategy } from "./infra/strategy/refresh.token.strategy";
+import { SentryLogger } from "./config/logger/logger.abstract";
+import { loggerService } from "./config/logger/logger.service";
 
 @Module({})
 export class SentryModule {
@@ -18,6 +20,10 @@ export class SentryModule {
       RefreshTokenStrategy,
       SentryService,
       AuthService,
+      {
+        provide: SentryLogger,
+        useClass: loggerService,
+      },
     ];
     const controllers = [SentryController];
     return {

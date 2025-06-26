@@ -41,7 +41,7 @@ export class AuthService {
       this.jwtService.sign(payload, {
         privateKey: readFileSync("private.key", "utf8"),
         algorithm: "RS256",
-        expiresIn: "7d",
+        expiresIn: "1d",
       }),
     ]);
 
@@ -64,14 +64,16 @@ export class AuthService {
 
       const { refreshToken } = auth;
 
-      if (refreshToken !== refreshTokeninput)
+      if (refreshToken !== refreshTokeninput) {
         throw new BadRequestException("Invalid refresh token");
+      }
 
-      const tokens = await this.signToken(user);
+      const payload = { username: user.username, id: user.id };
+      const access_token = await this.jwtService.sign(payload);
 
-      await this.authRepo.update(userId, tokens.refresh_token);
-
-      return tokens;
+      return {
+        access_token,
+      };
     } catch (error) {
       if (error instanceof BadRequestException) {
         this.logger.error(error.message);

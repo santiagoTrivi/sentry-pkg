@@ -6,13 +6,15 @@ import { LoginUserDto } from "./infra/dto/login.user.dto";
 import * as bcrypt from "bcrypt";
 import { UserProps } from "./domain/user.interface";
 import { readFileSync } from "fs";
+import { SentryLogger } from "./config/logger/logger.abstract";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly repo: UserRepository,
-    private readonly authRepo: AuthRepository
+    private readonly authRepo: AuthRepository,
+    private readonly logger: SentryLogger
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
@@ -55,19 +57,28 @@ export class AuthService {
     const auth = await this.authRepo.find(userId);
     const user = await this.repo.findById(userId);
 
-    if (!user) throw new BadRequestException("User not found");
-    if (!auth || !auth.refreshToken)
-      throw new BadRequestException("Invalid refresh token");
+    try {
+      if (!user) throw new BadRequestException("User not found");
+      if (!auth || !auth.refreshToken)
+        throw new BadRequestException("Invalid refresh token");
 
-    const { refreshToken } = auth;
+      const { refreshToken } = auth;
 
-    if (refreshToken !== refreshTokeninput)
-      throw new BadRequestException("Invalid refresh token");
+      if (refreshToken !== refreshTokeninput)
+        throw new BadRequestException("Invalid refresh token");
 
-    const tokens = await this.signToken(user);
+      const tokens = await this.signToken(user);
 
-    await this.authRepo.update(userId, tokens.refresh_token);
+      await this.authRepo.update(userId, tokens.refresh_token);
 
-    return tokens;
+      return tokens;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        this.logger.error(error.message);
+        throw new BadRequestException(error.message);
+      }
+      this.logger.error("unexpected error");
+      throw error;
+    }
   }
 }

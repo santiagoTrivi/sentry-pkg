@@ -69,7 +69,7 @@ El método estático `forRoot` acepta un objeto `SentryOptions` opcional, que te
 
 | Opción            | Tipo              | Valor por defecto            | Opciones                                                                                   |
 | ----------------- | ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `expiresIn`       | `string` `number` | `1m` (un minuto)             | `1m`, `5h`, `30d`                                                                          |
+| `expiresIn`       | `string` `number` | `1m` (un minuto)             | `1s`, `1m`, `5h`, `30d`                                                                    |
 | `databaseOptions` | `DatabaseOptions` | La data se guarda en memoria | Credenciales para la conexión a una base de datos [PostgreSQL](https://www.postgresql.org) |
 
 ```typescript
@@ -89,7 +89,7 @@ Esta opción define el tiempo de duración para el token interno utilizado por e
 Puedes expresar la duración como:
 
 - Un número (en milisegundos).
-- Una cadena de texto con unidades (por ejemplo: `1m`, `5h`, `30d`).
+- Una cadena de texto con unidades (por ejemplo: `1s`, `1m`, `5h`, `30d`).
 
 `databaseOptions?: DatabaseOptions`
 

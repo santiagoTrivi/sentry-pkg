@@ -135,6 +135,27 @@ export class AppModule {}
 
 En este ejemplo, el `SentryModule` se inicializa para que sus tokens internos duren 5 minutos y toda la data persistente se guarde en la base de datos [PostgreSQL](https://www.postgresql.org) especificada. Si databaseOptions se omitiera, la data se manejaría en memoria.
 
+### Guarda de Autenticación RSA: `RsaAuthGuard`
+
+`RsaAuthGuard` es un guard de autenticación dinámica diseñada para ser utilizada en varios controladores y validar la autenticidad del usuario a través de firmas digitales RSA.
+
+```typescript
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { AppService } from "./app.service";
+import { RsaAuthGuard } from "@sentry-pkg/pkg";
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  @UseGuards(RsaAuthGuard)
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+```
+
 ## Endpoints del paquetes
 
 Este controlador maneja las operaciones relacionadas con la autenticación de usuarios, incluyendo registro, inicio de sesión, refresco de tokens y obtención de la información del usuario autenticado.
